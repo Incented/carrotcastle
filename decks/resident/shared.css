@@ -1,0 +1,68 @@
+/* Carrot Castle Brand Style Guide - Light & Warm Theme */
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Primary Orange - Carrot signature */
+  --color-primary: #FF5500;
+  --color-primary-dark: #E64D00;
+  --color-primary-light: #FF7733;
+
+  /* Light Mode Palette - Warm Cream */
+  --color-surface: #FFF8EE;
+  --color-surface-foreground: #1A1A1A;
+  --color-secondary: #FFEFD9;
+  --color-muted: #FFE8CC;
+  --color-muted-foreground: #5C4A3A;
+  --color-border: #E8D5C0;
+
+  /* Accent Colors */
+  --color-warm: #FF8C42;
+  --color-cream: #FFF8F0;
+  --color-gold: #F59E0B;
+  --color-success: #22C55E;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Lexend Deca', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-surface-foreground);
+}
+
+.bg-surface { background: var(--color-surface); }
+.bg-secondary { background: var(--color-secondary); }
+.bg-muted { background: var(--color-muted); }
+
+.row { display: flex; flex-direction: row; }
+.col { display: flex; flex-direction: column; }
+.fill-width { width: 100%; }
+
+h1 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+p { line-height: 1.6; }
+
+.emoji-large {
+  font-size: 48px;
+}
+
+.card {
+  background: var(--color-secondary);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+}
+
+.highlight-box {
+  background: rgba(255, 85, 0, 0.08);
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 16px 24px;
+}

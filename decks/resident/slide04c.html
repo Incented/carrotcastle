@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        height: 420px;
+      }
+      .photo-grid img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body class="bg-surface" style="width: 960px; height: 540px; padding: 24px 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <p style="font-size: 14px; color: var(--color-primary); font-weight: 600;">Boulder Castle</p>
+      <p style="font-size: 11px; color: var(--color-muted-foreground);">Living Spaces & Amenities</p>
+    </div>
+    <div class="photo-grid">
+      <img src="../images/boulder/living 1.avif" alt="Living room">
+      <img src="../images/boulder/living 2.avif" alt="Living room">
+      <img src="../images/boulder/living 3.avif" alt="Living area">
+      <img src="../images/boulder/hot tub.avif" alt="Hot tub">
+      <img src="../images/boulder/kitchen1.avif" alt="Kitchen">
+      <img src="../images/boulder/kitchen 2.avif" alt="Kitchen">
+      <img src="../images/boulder/outdoor 5.avif" alt="Outdoor">
+      <img src="../images/boulder/bath 4.avif" alt="Bathroom">
+    </div>
+  </body>
+</html>

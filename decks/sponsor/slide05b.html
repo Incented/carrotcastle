@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 12px;
+        height: 100%;
+      }
+      .gallery img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .gallery .featured {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+    </style>
+  </head>
+  <body class="row bg-surface" style="width: 960px; height: 540px;">
+    <div style="width: 6px; background: var(--color-primary);"></div>
+    <div class="col fill-width" style="padding: 24px 32px;">
+      <div style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h1 style="font-size: 24px; color: var(--color-surface-foreground); margin-bottom: 4px;">
+            Denver Castle
+          </h1>
+          <p style="font-size: 13px; color: var(--color-primary);">
+            Game rooms, hot tub, entertainment central
+          </p>
+        </div>
+        <p style="font-size: 11px; color: var(--color-muted-foreground); text-transform: uppercase; letter-spacing: 2px;">
+          ETH Denver 2026
+        </p>
+      </div>
+
+      <div class="gallery">
+        <div class="featured">
+          <img src="../images/denver/outdoor 3.avif" alt="Denver outdoor" />
+        </div>
+        <img src="../images/denver/game room 1.avif" alt="Denver game room" />
+        <img src="../images/denver/living room 1.avif" alt="Denver living room" />
+        <img src="../images/denver/outdoor 1.avif" alt="Denver yard" />
+        <img src="../images/denver/game room 2.avif" alt="Denver arcade" />
+      </div>
+    </div>
+  </body>
+</html>

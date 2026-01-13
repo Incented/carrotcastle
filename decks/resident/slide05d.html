@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        height: 420px;
+      }
+      .photo-grid img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body class="bg-surface" style="width: 960px; height: 540px; padding: 24px 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <p style="font-size: 14px; color: var(--color-primary); font-weight: 600;">Denver Castle</p>
+      <p style="font-size: 11px; color: var(--color-muted-foreground);">Bedrooms & More</p>
+    </div>
+    <div class="photo-grid">
+      <img src="../images/denver/bed1.avif" alt="Bedroom 1">
+      <img src="../images/denver/bed2.avif" alt="Bedroom 2">
+      <img src="../images/denver/bed3.avif" alt="Bedroom 3">
+      <img src="../images/denver/bed4.avif" alt="Bedroom 4">
+      <img src="../images/denver/bed5.avif" alt="Bedroom 5">
+      <img src="../images/denver/bed6.avif" alt="Bedroom 6">
+      <img src="../images/denver/bed7.avif" alt="Bedroom 7">
+      <img src="../images/denver/outdoor 6.avif" alt="Outdoor">
+    </div>
+  </body>
+</html>

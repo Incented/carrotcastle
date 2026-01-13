@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrot Castle Resident Deck - Dev Mode</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥕</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap');
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #FFE8CC;
+      height: 100%;
+      font-family: 'Lexend Deca', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    .presentation {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-container {
+      position: relative;
+      width: 960px;
+      height: 540px;
+      transform-origin: center center;
+      background: #FFF8EE;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .slide-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 960px;
+      height: 540px;
+      border: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .slide-frame.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Navigation dots */
+    .nav-dots {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      padding: 0;
+    }
+
+    .nav-dot:hover {
+      background: rgba(0,0,0,0.4);
+    }
+
+    .nav-dot.active {
+      background: #FF5500;
+      transform: scale(1.2);
+    }
+
+    /* Slide counter */
+    .slide-counter {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      color: rgba(0,0,0,0.4);
+      font-size: 14px;
+      z-index: 100;
+    }
+
+    /* Arrow navigation */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.08);
+      border: none;
+      color: rgba(0,0,0,0.5);
+      font-size: 24px;
+      padding: 15px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    .nav-arrow:hover {
+      background: rgba(0,0,0,0.15);
+      color: #1A1A1A;
+    }
+
+    .nav-arrow.prev { left: 20px; }
+    .nav-arrow.next { right: 20px; }
+
+    .nav-arrow:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    /* Top bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(255,232,204,0.9), transparent);
+    }
+
+    .dev-badge {
+      background: #FF5500;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .top-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .top-btn {
+      background: rgba(0,0,0,0.08);
+      border: none;
+      color: rgba(0,0,0,0.6);
+      font-size: 12px;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .top-btn:hover {
+      background: rgba(0,0,0,0.15);
+      color: #1A1A1A;
+    }
+
+    /* Help text */
+    .help-text {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      color: rgba(0,0,0,0.3);
+      font-size: 12px;
+      z-index: 100;
+    }
+
+    /* Loading state */
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(0,0,0,0.3);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <span class="dev-badge">Carrot Castle Resident Deck</span>
+    <div class="top-buttons">
+      <button class="top-btn" id="reloadBtn" title="Reload current slide">Reload Slide</button>
+      <button class="top-btn" id="reloadAllBtn" title="Reload all slides">Reload All</button>
+      <button class="top-btn" id="fullscreenBtn" title="Toggle fullscreen">Fullscreen</button>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide-container" id="slideContainer">
+      <div class="loading">Loading slides...</div>
+    </div>
+  </div>
+
+  <button class="nav-arrow prev" id="prevBtn" aria-label="Previous slide">&#8249;</button>
+  <button class="nav-arrow next" id="nextBtn" aria-label="Next slide">&#8250;</button>
+
+  <div class="nav-dots" id="navDots"></div>
+
+  <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">15</span></div>
+
+  <div class="help-text">Arrow keys or click to navigate | R to reload | F for fullscreen</div>
+
+  <script>
+    const slides = [
+      'slide01.html', 'slide02.html', 'slide03.html', 'slide03b.html', 'slide03c.html',
+      'slide04.html', 'slide04b.html', 'slide04c.html', 'slide04d.html',
+      'slide05.html', 'slide05b.html', 'slide05c.html', 'slide05d.html',
+      'slide07.html', 'slide08.html'
+    ];
+
+    const totalSlides = slides.length;
+    let currentSlide = 1;
+    const iframes = [];
+
+    const slideContainer = document.getElementById('slideContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const navDotsContainer = document.getElementById('navDots');
+    const currentSlideEl = document.getElementById('currentSlide');
+    const totalSlidesEl = document.getElementById('totalSlides');
+    const reloadBtn = document.getElementById('reloadBtn');
+    const reloadAllBtn = document.getElementById('reloadAllBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    // Initialize
+    function init() {
+      totalSlidesEl.textContent = totalSlides;
+      slideContainer.innerHTML = '';
+
+      // Create iframes for each slide
+      slides.forEach((slide, i) => {
+        const iframe = document.createElement('iframe');
+        iframe.className = 'slide-frame' + (i === 0 ? ' active' : '');
+        iframe.dataset.slide = i + 1;
+        iframe.src = slide;
+        slideContainer.appendChild(iframe);
+        iframes.push(iframe);
+      });
+
+      // Create nav dots
+      navDotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        dot.dataset.slide = i + 1;
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.addEventListener('click', () => goToSlide(i + 1));
+        navDotsContainer.appendChild(dot);
+      });
+
+      updateScale();
+      updateButtonStates();
+    }
+
+    function updateScale() {
+      const scaleX = window.innerWidth / 960;
+      const scaleY = window.innerHeight / 540;
+      const scale = Math.min(scaleX, scaleY) * 0.85;
+      slideContainer.style.transform = `scale(${scale})`;
+    }
+
+    function goToSlide(n) {
+      if (n < 1 || n > totalSlides) return;
+
+      document.querySelector('.slide-frame.active')?.classList.remove('active');
+      document.querySelector('.nav-dot.active')?.classList.remove('active');
+
+      iframes[n - 1].classList.add('active');
+      document.querySelector(`.nav-dot[data-slide="${n}"]`).classList.add('active');
+
+      currentSlide = n;
+      currentSlideEl.textContent = n;
+      updateButtonStates();
+    }
+
+    function updateButtonStates() {
+      prevBtn.disabled = currentSlide === 1;
+      nextBtn.disabled = currentSlide === totalSlides;
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    function reloadCurrentSlide() {
+      const iframe = iframes[currentSlide - 1];
+      iframe.src = iframe.src;
+    }
+
+    function reloadAllSlides() {
+      iframes.forEach(iframe => {
+        iframe.src = iframe.src;
+      });
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Event listeners
+    document.addEventListener('keydown', (e) => {
+      switch(e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case ' ':
+        case 'PageDown':
+          e.preventDefault();
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'PageUp':
+          e.preventDefault();
+          prevSlide();
+          break;
+        case 'Home':
+          e.preventDefault();
+          goToSlide(1);
+          break;
+        case 'End':
+          e.preventDefault();
+          goToSlide(totalSlides);
+          break;
+        case 'r':
+        case 'R':
+          reloadCurrentSlide();
+          break;
+        case 'f':
+        case 'F':
+          toggleFullscreen();
+          break;
+        case 'Escape':
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          }
+          break;
+      }
+    });
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    reloadBtn.addEventListener('click', reloadCurrentSlide);
+    reloadAllBtn.addEventListener('click', reloadAllSlides);
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // Click on slide to advance
+    slideContainer.addEventListener('click', (e) => {
+      if (e.target.tagName === 'IFRAME') {
+        const rect = slideContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        if (x < rect.width / 3) {
+          prevSlide();
+        } else {
+          nextSlide();
+        }
+      }
+    });
+
+    // Scroll navigation
+    let lastScroll = 0;
+    document.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const now = Date.now();
+      if (now - lastScroll < 300) return;
+      if (Math.abs(e.deltaY) > 50) {
+        if (e.deltaY > 0) nextSlide();
+        else prevSlide();
+        lastScroll = now;
+      }
+    }, { passive: false });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+    document.addEventListener('touchend', (e) => {
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX < 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    // Responsive
+    window.addEventListener('resize', updateScale);
+
+    // Init
+    init();
+  </script>
+</body>
+</html>
